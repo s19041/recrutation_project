@@ -1,2 +1,2 @@
 # recrutation_project
-A repository for rectutation project.
+A repository for a rectutation project.
