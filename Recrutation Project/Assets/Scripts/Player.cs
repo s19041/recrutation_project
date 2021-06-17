@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     Rigidbody2D rigidbody2D;
+    Animator animator;
 
     [SerializeField] float speed = 5f;
     [SerializeField] float jumpforce = 5f;
@@ -19,6 +20,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         rigidbody2D = GetComponent<Rigidbody2D>();
+        animator = GetComponent<Animator>();
 
     }
 
@@ -27,6 +29,7 @@ public class Player : MonoBehaviour
     {
         Move();
         Jump();
+        Attack();
 
     }
 
@@ -43,6 +46,17 @@ public class Player : MonoBehaviour
         else if (input < 0 && isFacingRight == true)
         {
             Flip();
+        }
+
+        if (input != 0)
+        {
+            animator.SetBool("isRunning", true);
+
+        }
+        else
+        {
+            animator.SetBool("isRunning", false);
+
         }
 
 
@@ -69,6 +83,30 @@ public class Player : MonoBehaviour
         {
             Vector2 jumpVelocity = new Vector2(0f, jumpforce);
             rigidbody2D.velocity += jumpVelocity;
+        }
+
+
+        if (isOnGround == true)
+        {
+            animator.SetBool("isJumping", false);
+
+        }
+        else
+        {
+            animator.SetBool("isJumping", true);
+
+        }
+
+
+
+    }
+
+
+    private void Attack()
+    {
+        if (Input.GetKey(KeyCode.Space))
+        {
+            animator.SetTrigger("isAttacking");
         }
     }
 }
