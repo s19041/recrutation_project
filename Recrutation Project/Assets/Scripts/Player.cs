@@ -31,6 +31,8 @@ public class Player : MonoBehaviour
         Jump();
         Attack();
 
+        
+
     }
 
 
