@@ -37,8 +37,15 @@ public class GameSession : MonoBehaviour
 
     public void TakeLife()
     {
-        playerLives--;
-        livesText.text = playerLives.ToString();
+        if (playerLives > 0)
+        {
+            playerLives--;
+            livesText.text = playerLives.ToString();
+        }
+        else if(playerLives==0)
+        {
+            FindObjectOfType<Player>().Die();
+        }
        
     }
 }

@@ -10,11 +10,20 @@ public class Player : MonoBehaviour
     [SerializeField] float speed = 5f;
     [SerializeField] float jumpforce = 5f;
     bool isFacingRight = true;
+    bool isDead = false;
 
     bool isOnGround;
     [SerializeField] float checkRadius;
     [SerializeField] Transform groundCheck;
     [SerializeField] LayerMask groundLayer;
+
+    [SerializeField] float timeBetweenAttacks;
+    float nextAttackTime;
+
+    [SerializeField] Transform attackPoint;
+    [SerializeField] float attackRange;
+    [SerializeField] LayerMask enemyLayer;
+    [SerializeField] int damage = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -27,9 +36,14 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Move();
-        Jump();
-        Attack();
+
+        if (isDead) return;
+        
+
+            Move();
+            Jump();
+            Attack();
+        
 
         
 
@@ -106,9 +120,33 @@ public class Player : MonoBehaviour
 
     private void Attack()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (Time.time > nextAttackTime)
         {
-            animator.SetTrigger("isAttacking");
+            if (Input.GetKey(KeyCode.Space))
+            {
+
+                animator.SetTrigger("isAttacking");
+                nextAttackTime = Time.time + timeBetweenAttacks;
+
+                Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
+                foreach (Collider2D col in enemiesToDamage)
+                {
+                    col.GetComponent<Enemy>().TakeDamage(damage);
+                }
+            }
         }
     }
+
+    public void Die()
+    {
+        isDead = true;
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(attackPoint.position, attackRange);
+    }
+
+
 }
