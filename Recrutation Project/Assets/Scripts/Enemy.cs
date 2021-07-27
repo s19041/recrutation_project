@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] int health = 2;
     Animator animator;
     [SerializeField] float force = 1f;
+    [SerializeField] bool isGoblin = false;
 
 
 
@@ -14,6 +15,7 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        animator = GetComponent<Animator>();
         
     }
 
@@ -25,23 +27,42 @@ public class Enemy : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.GetComponent<Player>())
+        if (!isGoblin)
         {
-            FindObjectOfType<GameSession>().TakeLife();
-            collision.GetComponent<Rigidbody2D>().AddForce(transform.up * force, ForceMode2D.Impulse);
+            if (collision.GetComponent<Player>())
+            {
+                FindObjectOfType<GameSession>().TakeLife();
+
+                collision.GetComponent<Rigidbody2D>().AddForce(transform.up * force, ForceMode2D.Impulse);
+
+
+            }
         }
     }
 
     public void TakeDamage(int damage)
     {
         health -= damage;
+        animator.SetTrigger("IsHit");
         if (health <= 0)
         {
-            Destroy(gameObject);
+            animator.SetTrigger("IsDying");
+
+            
         }
 
 
     }
+
+
+    public void DieAndDestroy()
+    {
+        Destroy(gameObject);
+    }
+
+    
+
+    
 
 
 }

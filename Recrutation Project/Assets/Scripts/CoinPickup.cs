@@ -11,10 +11,12 @@ public class CoinPickup : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //add score to UI
 
-        Destroy(gameObject);
-        FindObjectOfType<GameSession>().AddScore(value);
+        if (collision.GetComponent<Player>())
+        {
+            Destroy(gameObject);
+            FindObjectOfType<GameSession>().AddScore(value);
+        }
 
     }
 }

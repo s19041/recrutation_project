@@ -25,6 +25,8 @@ public class Player : MonoBehaviour
     [SerializeField] LayerMask enemyLayer;
     [SerializeField] int damage = 1;
 
+    [SerializeField] GameObject hitVFX;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -131,7 +133,14 @@ public class Player : MonoBehaviour
                 Collider2D[] enemiesToDamage = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayer);
                 foreach (Collider2D col in enemiesToDamage)
                 {
+                    if(col.GetComponent<Vase>())
+                        col.GetComponent<Vase>().DestroyOnAttack();
+                    else
                     col.GetComponent<Enemy>().TakeDamage(damage);
+
+                    Instantiate(hitVFX, new Vector3(col.transform.position.x,col.transform.position.y), Quaternion.identity);
+
+                    
                 }
             }
         }
@@ -140,6 +149,7 @@ public class Player : MonoBehaviour
     public void Die()
     {
         isDead = true;
+        animator.SetTrigger("IsDead");
     }
 
     private void OnDrawGizmosSelected()
@@ -147,6 +157,17 @@ public class Player : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(attackPoint.position, attackRange);
     }
+
+    public bool IsTurnedRight()
+    {
+        return isFacingRight;
+    }
+
+    public void DieAndDestroy()
+    {
+        Destroy(gameObject);
+    }
+
 
 
 }

@@ -65,6 +65,11 @@ public class Patrol : MonoBehaviour
         isFacingRight = !isFacingRight;
     }
 
+    public void ChangeMoveSpeed(float speed)
+    {
+        this.speed = speed;
+    }
+
 
 
 }
